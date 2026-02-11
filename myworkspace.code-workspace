@@ -1,0 +1,15 @@
+{
+	"folders": [
+		{
+			"path": "../gds-tests"
+		},
+		{
+			"path": "../lab-equipment"
+		},
+		{
+			"name": "test_osa",
+			"path": "."
+		}
+	],
+	"settings": {}
+}
