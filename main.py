@@ -1,6 +1,8 @@
+from utils import plot_trace
+from lab_devices import Yeni
+
 def main():
     print("Hello from test-osa!")
-    from lab_devices import Yeni
 
     # Connect to the OSA
     try:
@@ -28,8 +30,9 @@ def main():
         )
         osa.run_sweep(tracename, averages=averages)
         trace = osa.get_trace(tracename)
-    
 
+        # Plot the trace
+        plot_trace(trace)
 
 if __name__ == "__main__":
     main()
