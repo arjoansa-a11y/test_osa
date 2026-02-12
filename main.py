@@ -38,14 +38,15 @@ def main():
     doc.idsource = "ASE1"#'FiberLabs ASE-FL7015 1530-1610nm'
     doc.idosa = 'OSA20' # "EXFO OSA20"
     doc.operator_notes = """NA"""
-
+    doc.opm_power = -6 #dBm
+    
     # Saving data
     home = expanduser("~")
-    folder_lab = os.path.expandvars("%USERPROFILE%\\data")
-    folder_measurements = "\\".join([folder_lab,project,wafer,reticle,die_name])
-    file_name = f"{dut}-{polarization}"
-    file_path = "\\".join([folder_measurements,file_name])
-    
+    folder_lab = os.path.expandvars("./data")
+    folder_measurements = "/".join([folder_lab,project,wafer,reticle,die_name])
+    file_name = f"{dut}"
+    file_path = "/".join([folder_measurements,file_name])
+
     # Work with the OSA
     with osa: 
         osa_idn = osa.id
