@@ -25,21 +25,22 @@ def main():
     # Configure the YAML document
     doc = YAMLDOCUMENT()
     doc.datetime = formatted
-    doc.operator = 'Camilo Cano'
-    doc.setup = 'P2.S1'
-    doc.project = project = UNDEFINED
-    doc.wafer = wafer = UNDEFINED
-    doc.reticle = reticle = UNDEFINED
-    doc.die = die_name = UNDEFINED
-    doc.dut = dut = "wvg"
+    doc.operator = 'Joan Aroca'
+    doc.setup = 'P2.S2'
+    doc.project = project = "PHYSIS"
+    doc.wafer = wafer = "17753-5"
+    doc.reticle = reticle = "2"
+    doc.die = die_name = "6"
+    doc.dut = dut = "u2"
     doc.polarization = polarization = 'nana'
     doc.die_temperature = "na" #kOhm Tacc
     doc.coupling_type = 'SM-SM'
     doc.idsource = "ASE1"#'FiberLabs ASE-FL7015 1530-1610nm'
     doc.idosa = 'OSA20' # "EXFO OSA20"
     doc.operator_notes = """NA"""
-    doc.opm_power = -6 #dBm
-    
+    doc.opm_power = -19.27 #dBm
+    doc.splitter = "1x2-95/5"
+
     # Saving data
     home = expanduser("~")
     folder_lab = os.path.expandvars("./data")
