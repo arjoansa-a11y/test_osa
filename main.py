@@ -1,5 +1,5 @@
 from utils import plot_trace, save_trace
-from lab_devices import Yeni, YAMLDOCUMENT
+from lab_devices import Yeni, Opm, YAMLDOCUMENT
 
 import os, datetime, time
 from os.path import isfile, expanduser
@@ -22,6 +22,13 @@ def main():
     except Exception as e:
         raise ConnectionError(f"Could not connect to OSA:\n {e}")
 
+    # Connect to the OPM
+    try:
+        opm = Opm(
+            resource_address = 'USB0::0x1313::0x8078::P0030943::INSTR',
+        )
+    except Exception as e:
+        raise ConnectionError(f"Could not connect to OPM:\n {e}")
     # Configure the YAML document
     doc = YAMLDOCUMENT()
     doc.datetime = formatted
@@ -51,22 +58,23 @@ def main():
     # Work with the OSA
     with osa: 
         osa_idn = osa.id
+        opm_idn = opm.id
         # osa.wait_for()
         print("Instrument ID:", osa_idn)
+        print("Instrument ID:", opm_idn)
 
         # OSA settings
         tracename = 1
         averages = 5
         osa.setup_sweep(
-            center_wavelength = 1550e-9,
-            span = 100e-9,
+            center_wavelength = 1565e-9,
+            span = 80e-9,
             sweep_mode = 'SINGLE',
-            sensitivity = -65,
+            sensitivity = -70,
         )
         osa.run_sweep(tracename, averages=averages)
         trace = osa.get_trace(tracename)
-        doc.coupler_2X2_90_10_SN = "none"
- 
+        print(f"Power measured by OPM: {opm.measure_power()} dBm")
         ## Editing the yaml document
         doc.osa_idn = osa_idn
         doc.osa_resolution = osa.resolution_bandwidth
