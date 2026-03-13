@@ -35,18 +35,18 @@ def main():
     doc.operator = 'Joan Aroca'
     doc.setup = 'P2.S2'
     doc.project = project = "PHYSIS"
-    doc.wafer = wafer = "17753-5"
+    doc.wafer = wafer = "17753-4"
     doc.reticle = reticle = "2"
-    doc.die = die_name = "6"
-    doc.dut = dut = "u2"
+    doc.die = die_name = "5"
+    doc.dut = dut = "u3"
     doc.polarization = polarization = 'nana'
     doc.die_temperature = "na" #kOhm Tacc
     doc.coupling_type = 'SM-SM'
-    doc.idsource = "ASE1"#'FiberLabs ASE-FL7015 1530-1610nm'
+    doc.idsource = "ASE1" #'FiberLabs ASE-FL7015 1530-1610nm'
     doc.idosa = 'OSA20' # "EXFO OSA20"
     doc.operator_notes = """NA"""
-    doc.opm_power = -19.27 #dBm
-    doc.splitter = "1x2-95/5"
+    doc.opm_power = opm.measure_power() #dBm
+    doc.splitter = "1x2-95/5" #95% to OSA, 5% to OPM
 
     # Saving data
     home = expanduser("~")
