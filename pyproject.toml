@@ -10,7 +10,9 @@ dependencies = [
     "pyusb>=1.3.1",
     "pyvisa-py>=0.8.1",
     "pyqt5-qt5==5.15.2; platform_system == 'Windows'",
+    "ipywidgets",
+    "pyQt5"
 ]
 
 [tool.uv.sources]
-lab-devices = { git = "https://github.com/UPVfab/lab_equipment.git", rev = "alpha_0_1_2" }
+lab-devices = { git = "https://github.com/UPVfab/lab_equipment.git", rev = "alpha_1_4_0" }

@@ -1,5 +1,5 @@
 from utils import plot_trace, save_trace
-from lab_devices import Yeni, Opm, YAMLDOCUMENT
+from lab_devices import Yeni, Yoko, Opm, YAMLDOCUMENT
 
 import os, datetime, time
 from os.path import isfile, expanduser
@@ -16,36 +16,40 @@ def main():
 
     # Connect to the OSA
     try:
-        osa = Yeni(
-            resource_address = 'TCPIP0::192.168.54.1::5025::SOCKET',
-        )
+        osa = Yeni(resource_address = 'TCPIP0::192.168.54.1::5025::SOCKET')
+        #osa = Yoko(resource_address = 'TCPIP0::169.68.68.2::10001::SOCKET')
     except Exception as e:
         raise ConnectionError(f"Could not connect to OSA:\n {e}")
 
     # Connect to the OPM
-    try:
-        opm = Opm(
-            resource_address = 'USB0::0x1313::0x8078::P0030943::INSTR',
-        )
-    except Exception as e:
-        raise ConnectionError(f"Could not connect to OPM:\n {e}")
+    # try:
+    #     opm = Opm(
+    #         resource_address = 'USB0::0x1313::0x8078::P0030943::INSTR',
+    #     )
+    # except Exception as e:
+    #     raise ConnectionError(f"Could not connect to OPM:\n {e}")
     # Configure the YAML document
     doc = YAMLDOCUMENT()
     doc.datetime = formatted
     doc.operator = 'Joan Aroca'
     doc.setup = 'P2.S2'
-    doc.project = project = "PHYSIS"
-    doc.wafer = wafer = "17753-4"
-    doc.reticle = reticle = "2"
-    doc.die = die_name = "5"
-    doc.dut = dut = "u3"
+    doc.project = project = "MAGDALENA"
+    doc.wafer = wafer = "V038_1094"
+    doc.reticle = reticle = "160MJ-0.4um"
+    doc.die = die_name = "2"
+    doc.dut = dut = "mzi_3_11 v2"
     doc.polarization = polarization = 'nana'
     doc.die_temperature = "na" #kOhm Tacc
     doc.coupling_type = 'SM-SM'
     doc.idsource = "ASE1" #'FiberLabs ASE-FL7015 1530-1610nm'
-    doc.idosa = 'OSA20' # "EXFO OSA20"
+    doc.idosa = 'OSA20' # "YOKOGAWA AQ6370E"
     doc.operator_notes = """NA"""
-    doc.opm_power = opm.measure_power() #dBm
+    
+   # doc.opm_power = opm.measure_power() #dBm
+    
+    doc.opm_power = 45.23  #dBm
+    doc.input_port = "1"
+    doc.output_port = "1"
     doc.splitter = "1x2-95/5" #95% to OSA, 5% to OPM
 
     # Saving data
@@ -58,10 +62,10 @@ def main():
     # Work with the OSA
     with osa: 
         osa_idn = osa.id
-        opm_idn = opm.id
+        #opm_idn = opm.id
         # osa.wait_for()
         print("Instrument ID:", osa_idn)
-        print("Instrument ID:", opm_idn)
+        # print("Instrument ID:", opm_idn)
 
         # OSA settings
         tracename = 1
@@ -70,11 +74,12 @@ def main():
             center_wavelength = 1565e-9,
             span = 80e-9,
             sweep_mode = 'SINGLE',
-            sensitivity = -70,
+            #sensitivity = -80,
+            #resolution = 5e-11
         )
         osa.run_sweep(tracename, averages=averages)
         trace = osa.get_trace(tracename)
-        print(f"Power measured by OPM: {opm.measure_power()} dBm")
+        # print(f"Power measured by OPM: {opm.measure_power()} dBm")
         ## Editing the yaml document
         doc.osa_idn = osa_idn
         doc.osa_resolution = osa.resolution_bandwidth
