@@ -1,3 +1,5 @@
+from pydoc import doc
+
 from utils import plot_trace, save_trace
 from lab_devices import Yeni, Yoko, Opm, YAMLDOCUMENT
 
@@ -20,36 +22,35 @@ def main():
         #osa = Yoko(resource_address = 'TCPIP0::169.68.68.2::10001::SOCKET')
     except Exception as e:
         raise ConnectionError(f"Could not connect to OSA:\n {e}")
-
+    
     # Connect to the OPM
-    # try:
-    #     opm = Opm(
-    #         resource_address = 'USB0::0x1313::0x8078::P0030943::INSTR',
-    #     )
-    # except Exception as e:
-    #     raise ConnectionError(f"Could not connect to OPM:\n {e}")
+    try:
+        opm = Opm(
+             resource_address = 'USB0::0x1313::0x8078::P0030943::INSTR',
+         )
+    except Exception as e:
+        raise ConnectionError(f"Could not connect to OPM:\n {e}")
     # Configure the YAML document
     doc = YAMLDOCUMENT()
     doc.datetime = formatted
     doc.operator = 'Joan Aroca'
     doc.setup = 'P2.S2'
-    doc.project = project = "MAGDALENA"
-    doc.wafer = wafer = "V038_1094"
-    doc.reticle = reticle = "160MJ-0.4um"
-    doc.die = die_name = "2"
-    doc.dut = dut = "mzi_3_11 v2"
+    doc.project = project = "test"
+    doc.wafer = wafer = "test"
+    doc.reticle = reticle = "na"
+    doc.die = die_name = "na"
+    doc.dut = dut = "test"
     doc.polarization = polarization = 'nana'
     doc.die_temperature = "na" #kOhm Tacc
     doc.coupling_type = 'SM-SM'
     doc.idsource = "ASE1" #'FiberLabs ASE-FL7015 1530-1610nm'
     doc.idosa = 'OSA20' # "YOKOGAWA AQ6370E"
     doc.operator_notes = """NA"""
+    #doc.opm_power = opm.measure_power() #dBm
     
-   # doc.opm_power = opm.measure_power() #dBm
-    
-    doc.opm_power = 45.23  #dBm
-    doc.input_port = "1"
-    doc.output_port = "1"
+    doc.opm_power = 20.35 #dBm
+    doc.input_port = "na"
+    doc.output_port = "na"
     doc.splitter = "1x2-95/5" #95% to OSA, 5% to OPM
 
     # Saving data
@@ -79,7 +80,7 @@ def main():
         )
         osa.run_sweep(tracename, averages=averages)
         trace = osa.get_trace(tracename)
-        # print(f"Power measured by OPM: {opm.measure_power()} dBm")
+        print(f"Power measured by OPM: {opm.measure_power()} dBm")
         ## Editing the yaml document
         doc.osa_idn = osa_idn
         doc.osa_resolution = osa.resolution_bandwidth
