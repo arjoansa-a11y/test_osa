@@ -24,31 +24,31 @@ def main():
         raise ConnectionError(f"Could not connect to OSA:\n {e}")
     
     # Connect to the OPM
-    try:
+    '''try:
         opm = Opm(
              resource_address = 'USB0::0x1313::0x8078::P0030943::INSTR',
          )
     except Exception as e:
-        raise ConnectionError(f"Could not connect to OPM:\n {e}")
+        raise ConnectionError(f"Could not connect to OPM:\n {e}")'''
     # Configure the YAML document
     doc = YAMLDOCUMENT()
     doc.datetime = formatted
     doc.operator = 'Joan Aroca'
     doc.setup = 'P2.S2'
-    doc.project = project = "test"
-    doc.wafer = wafer = "test"
-    doc.reticle = reticle = "na"
-    doc.die = die_name = "na"
-    doc.dut = dut = "test"
+    doc.project = project = "MPWrun0"
+    doc.wafer = wafer = "V053_1471"
+    doc.reticle = reticle = "3"
+    doc.die = die_name = "A6"
+    doc.dut = dut = "U3_1560"
     doc.polarization = polarization = 'nana'
     doc.die_temperature = "na" #kOhm Tacc
     doc.coupling_type = 'SM-SM'
     doc.idsource = "ASE1" #'FiberLabs ASE-FL7015 1530-1610nm'
     doc.idosa = 'OSA20' # "YOKOGAWA AQ6370E"
-    doc.operator_notes = """NA"""
+    doc.operator_notes = """na"""
     #doc.opm_power = opm.measure_power() #dBm
     
-    doc.opm_power = 20.35 #dBm
+    doc.opm_power = -17.32 #dBm
     doc.input_port = "na"
     doc.output_port = "na"
     doc.splitter = "1x2-95/5" #95% to OSA, 5% to OPM
@@ -75,16 +75,25 @@ def main():
             center_wavelength = 1565e-9,
             span = 80e-9,
             sweep_mode = 'SINGLE',
-            #sensitivity = -80,
+            #sensitivity = -75,
             #resolution = 5e-11
         )
         osa.run_sweep(tracename, averages=averages)
         trace = osa.get_trace(tracename)
-        print(f"Power measured by OPM: {opm.measure_power()} dBm")
+        #print(f"Power measured by OPM: {opm.measure_power()} dBm")
         ## Editing the yaml document
         doc.osa_idn = osa_idn
         doc.osa_resolution = osa.resolution_bandwidth
         doc.osa_sensitivity = osa.sensitivity_level
+
+        ########## OSA20 Sensitivity ##############
+        # 1.0 --> -55 dBm, 2000 nm/s
+        # 2.0 --> -60 dBm, 700 nm/s
+        # 3.0 --> -65 dBm, 200 nm/s
+        # 4.0 --> -70 dBm, 20 nm/s
+        # 5.0 --> -75 dBm, 2 nm/s
+        # 6.0 --> .80 dbM, 0.5 nm/s
+
         doc.osa_start_wavelength = osa.wavelength_center-osa.wavelength_span/2 # do not use osa.start_wavelength it gives lot of digits
         doc.osa_stop_wavelength =  osa.wavelength_center+osa.wavelength_span/2 # do not use osa.stop_wavelength it gives lot of digits
         doc.osa_sweep_mode = osa.sweep_mode
